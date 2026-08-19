@@ -23,9 +23,18 @@ test.describe("Problem user add to cart", () => {
 
         const firstItem = page.locator('[data-test="inventory-item"]').nth(0)
         await firstItem.locator('[id="add-to-cart-sauce-labs-backpack"]').click();
-
         await expect(cartNumber).toHaveText("1");
 
+
+        const secondItem = page.locator('[data-test="inventory-item"]').nth(1);
+        await secondItem.locator('[id="add-to-cart-sauce-labs-bike-light"]').click();
+        await expect(cartNumber).toHaveText("2");
+
+        const thirdItem = page.locator('[data-test="inventory-item"]').nth(2);
+        await thirdItem.locator('[id="add-to-cart-sauce-labs-bolt-t-shirt"]').click();
+        //BUG FOUND
+        await expect(cartNumber).toHaveText("3");
+        //
     })
 
 
