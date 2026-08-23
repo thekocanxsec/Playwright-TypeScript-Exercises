@@ -37,4 +37,48 @@ test.describe("Testing removal of items with Problem User " , () =>{
         await expect(countOfItemsInCart).toHaveText("2");
     })
 
+    test("Remove items from cart page", async({page}) => {
+        await page.goto("https://www.saucedemo.com")
+
+        await page.locator('[data-test="username"]').fill("problem_user");
+        await page.locator('[data-test="password"]').fill("secret_sauce");
+        await page.locator('[data-test="login-button"]').click();
+
+        await expect(page).toHaveURL("https://www.saucedemo.com/inventory.html")
+
+        const firstItem = page.locator('[class="inventory_item"]').nth(0);
+        const secondItem = page.locator('[class="inventory_item"]').nth(1);
+        const thirdItem = page.locator('[class="inventory_item"]').nth(2);
+
+        await firstItem.locator('[class="btn btn_primary btn_small btn_inventory "]').click()
+        await secondItem.locator('[class="btn btn_primary btn_small btn_inventory "]').click();
+        
+        await page.locator('[id="shopping_cart_container"]').click();
+
+        await expect(page).toHaveURL("https://www.saucedemo.com/cart.html");
+         
+        const items = page.locator('[class="cart_item"]')
+
+        for(let i = 0; i<2; i++){
+            await expect(items.nth(i)).toBeVisible();
+        }
+    
+
+        for(let i = 0; i<2; i++){
+            await items.nth(0).locator('button').click();
+        }
+
+        await expect(items).not.toBeVisible();
+
+        await page.goBack();
+
+        const filterButton = page.locator('[data-test="product-sort-container"]');
+
+        await expect(filterButton).toBeVisible();
+
+        await filterButton.selectOption("az");
+
+        await expect(filterButton).toHaveValue("az");
+    })
+
 })
